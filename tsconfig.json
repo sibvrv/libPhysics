@@ -14,8 +14,12 @@
     "sourceMap": true,
     "declarationMap": true
   },
+  "include": [
+    "src"
+  ],
   "exclude": [
     "dist",
+    "build",
     "node_modules",
     "**/*.spec.ts"
   ]
