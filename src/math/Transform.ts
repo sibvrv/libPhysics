@@ -8,23 +8,23 @@ module.exports = Transform;
  * @constructor
  */
 function Transform(options) {
-    options = options || {};
+  options = options || {};
 
-	/**
-	 * @property {Vec3} position
-	 */
-	this.position = new Vec3();
-    if(options.position){
-        this.position.copy(options.position);
-    }
+  /**
+   * @property {Vec3} position
+   */
+  this.position = new Vec3();
+  if (options.position) {
+    this.position.copy(options.position);
+  }
 
-	/**
-	 * @property {Quaternion} quaternion
-	 */
-	this.quaternion = new Quaternion();
-    if(options.quaternion){
-        this.quaternion.copy(options.quaternion);
-    }
+  /**
+   * @property {Quaternion} quaternion
+   */
+  this.quaternion = new Quaternion();
+  if (options.quaternion) {
+    this.quaternion.copy(options.quaternion);
+  }
 }
 
 var tmpQuat = new Quaternion();
@@ -37,12 +37,12 @@ var tmpQuat = new Quaternion();
  * @param {Vec3} worldPoint
  * @param {Vec3} result
  */
-Transform.pointToLocalFrame = function(position, quaternion, worldPoint, result){
-    var result = result || new Vec3();
-    worldPoint.vsub(position, result);
-    quaternion.conjugate(tmpQuat);
-    tmpQuat.vmult(result, result);
-    return result;
+Transform.pointToLocalFrame = function(position, quaternion, worldPoint, result) {
+  var result = result || new Vec3();
+  worldPoint.vsub(position, result);
+  quaternion.conjugate(tmpQuat);
+  tmpQuat.vmult(result, result);
+  return result;
 };
 
 /**
@@ -52,8 +52,8 @@ Transform.pointToLocalFrame = function(position, quaternion, worldPoint, result)
  * @param  {Vec3} result
  * @return {Vec3} The "result" vector object
  */
-Transform.prototype.pointToLocal = function(worldPoint, result){
-    return Transform.pointToLocalFrame(this.position, this.quaternion, worldPoint, result);
+Transform.prototype.pointToLocal = function(worldPoint, result) {
+  return Transform.pointToLocalFrame(this.position, this.quaternion, worldPoint, result);
 };
 
 /**
@@ -64,11 +64,11 @@ Transform.prototype.pointToLocal = function(worldPoint, result){
  * @param {Vec3} localPoint
  * @param {Vec3} result
  */
-Transform.pointToWorldFrame = function(position, quaternion, localPoint, result){
-    var result = result || new Vec3();
-    quaternion.vmult(localPoint, result);
-    result.vadd(position, result);
-    return result;
+Transform.pointToWorldFrame = function(position, quaternion, localPoint, result) {
+  var result = result || new Vec3();
+  quaternion.vmult(localPoint, result);
+  result.vadd(position, result);
+  return result;
 };
 
 /**
@@ -78,26 +78,25 @@ Transform.pointToWorldFrame = function(position, quaternion, localPoint, result)
  * @param  {Vec3} result
  * @return {Vec3} The "result" vector object
  */
-Transform.prototype.pointToWorld = function(localPoint, result){
-    return Transform.pointToWorldFrame(this.position, this.quaternion, localPoint, result);
+Transform.prototype.pointToWorld = function(localPoint, result) {
+  return Transform.pointToWorldFrame(this.position, this.quaternion, localPoint, result);
 };
 
-
-Transform.prototype.vectorToWorldFrame = function(localVector, result){
-    var result = result || new Vec3();
-    this.quaternion.vmult(localVector, result);
-    return result;
+Transform.prototype.vectorToWorldFrame = function(localVector, result) {
+  var result = result || new Vec3();
+  this.quaternion.vmult(localVector, result);
+  return result;
 };
 
-Transform.vectorToWorldFrame = function(quaternion, localVector, result){
-    quaternion.vmult(localVector, result);
-    return result;
+Transform.vectorToWorldFrame = function(quaternion, localVector, result) {
+  quaternion.vmult(localVector, result);
+  return result;
 };
 
-Transform.vectorToLocalFrame = function(position, quaternion, worldVector, result){
-    var result = result || new Vec3();
-    quaternion.w *= -1;
-    quaternion.vmult(worldVector, result);
-    quaternion.w *= -1;
-    return result;
+Transform.vectorToLocalFrame = function(position, quaternion, worldVector, result) {
+  var result = result || new Vec3();
+  quaternion.w *= -1;
+  quaternion.vmult(worldVector, result);
+  quaternion.w *= -1;
+  return result;
 };

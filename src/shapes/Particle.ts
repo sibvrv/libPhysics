@@ -10,11 +10,12 @@ var Vec3 = require('../math/Vec3');
  * @author schteppe
  * @extends Shape
  */
-function Particle(){
-    Shape.call(this, {
-        type: Shape.types.PARTICLE
-    });
+function Particle() {
+  Shape.call(this, {
+    type: Shape.types.PARTICLE,
+  });
 }
+
 Particle.prototype = new Shape();
 Particle.prototype.constructor = Particle;
 
@@ -24,22 +25,22 @@ Particle.prototype.constructor = Particle;
  * @param  {Vec3} target
  * @return {Vec3}
  */
-Particle.prototype.calculateLocalInertia = function(mass,target){
-    target = target || new Vec3();
-    target.set(0, 0, 0);
-    return target;
+Particle.prototype.calculateLocalInertia = function(mass, target) {
+  target = target || new Vec3();
+  target.set(0, 0, 0);
+  return target;
 };
 
-Particle.prototype.volume = function(){
-    return 0;
+Particle.prototype.volume = function() {
+  return 0;
 };
 
-Particle.prototype.updateBoundingSphereRadius = function(){
-    this.boundingSphereRadius = 0;
+Particle.prototype.updateBoundingSphereRadius = function() {
+  this.boundingSphereRadius = 0;
 };
 
-Particle.prototype.calculateWorldAABB = function(pos,quat,min,max){
-    // Get each axis max
-    min.copy(pos);
-    max.copy(pos);
+Particle.prototype.calculateWorldAABB = function(pos, quat, min, max) {
+  // Get each axis max
+  min.copy(pos);
+  max.copy(pos);
 };

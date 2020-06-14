@@ -7,12 +7,12 @@ module.exports = ObjectCollisionMatrix;
  */
 function ObjectCollisionMatrix() {
 
-    /**
-     * The matrix storage
-     * @property matrix
-     * @type {Object}
-     */
-	this.matrix = {};
+  /**
+   * The matrix storage
+   * @property matrix
+   * @type {Object}
+   */
+  this.matrix = {};
 }
 
 /**
@@ -22,14 +22,14 @@ function ObjectCollisionMatrix() {
  * @return {Number}
  */
 ObjectCollisionMatrix.prototype.get = function(i, j) {
-	i = i.id;
-	j = j.id;
-    if (j > i) {
-        var temp = j;
-        j = i;
-        i = temp;
-    }
-	return i+'-'+j in this.matrix;
+  i = i.id;
+  j = j.id;
+  if (j > i) {
+    var temp = j;
+    j = i;
+    i = temp;
+  }
+  return i + '-' + j in this.matrix;
 };
 
 /**
@@ -39,19 +39,18 @@ ObjectCollisionMatrix.prototype.get = function(i, j) {
  * @param {Number} value
  */
 ObjectCollisionMatrix.prototype.set = function(i, j, value) {
-	i = i.id;
-	j = j.id;
-    if (j > i) {
-        var temp = j;
-        j = i;
-        i = temp;
-	}
-	if (value) {
-		this.matrix[i+'-'+j] = true;
-	}
-	else {
-		delete this.matrix[i+'-'+j];
-	}
+  i = i.id;
+  j = j.id;
+  if (j > i) {
+    var temp = j;
+    j = i;
+    i = temp;
+  }
+  if (value) {
+    this.matrix[i + '-' + j] = true;
+  } else {
+    delete this.matrix[i + '-' + j];
+  }
 };
 
 /**
@@ -59,7 +58,7 @@ ObjectCollisionMatrix.prototype.set = function(i, j, value) {
  * @method reset
  */
 ObjectCollisionMatrix.prototype.reset = function() {
-	this.matrix = {};
+  this.matrix = {};
 };
 
 /**

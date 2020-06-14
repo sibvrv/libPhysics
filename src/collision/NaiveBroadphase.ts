@@ -10,9 +10,10 @@ var AABB = require('./AABB');
  * @description The naive broadphase looks at all possible pairs without restriction, therefore it has complexity N^2 (which is bad)
  * @extends Broadphase
  */
-function NaiveBroadphase(){
-    Broadphase.apply(this);
+function NaiveBroadphase() {
+  Broadphase.apply(this);
 }
+
 NaiveBroadphase.prototype = new Broadphase();
 NaiveBroadphase.prototype.constructor = NaiveBroadphase;
 
@@ -23,25 +24,25 @@ NaiveBroadphase.prototype.constructor = NaiveBroadphase;
  * @param {Array} pairs1
  * @param {Array} pairs2
  */
-NaiveBroadphase.prototype.collisionPairs = function(world,pairs1,pairs2){
-    var bodies = world.bodies,
-        n = bodies.length,
-        i,j,bi,bj;
+NaiveBroadphase.prototype.collisionPairs = function(world, pairs1, pairs2) {
+  var bodies = world.bodies,
+    n = bodies.length,
+    i, j, bi, bj;
 
-    // Naive N^2 ftw!
-    for(i=0; i!==n; i++){
-        for(j=0; j!==i; j++){
+  // Naive N^2 ftw!
+  for (i = 0; i !== n; i++) {
+    for (j = 0; j !== i; j++) {
 
-            bi = bodies[i];
-            bj = bodies[j];
+      bi = bodies[i];
+      bj = bodies[j];
 
-            if(!this.needBroadphaseCollision(bi,bj)){
-                continue;
-            }
+      if (!this.needBroadphaseCollision(bi, bj)) {
+        continue;
+      }
 
-            this.intersectionTest(bi,bj,pairs1,pairs2);
-        }
+      this.intersectionTest(bi, bj, pairs1, pairs2);
     }
+  }
 };
 
 var tmpAABB = new AABB();
@@ -54,21 +55,21 @@ var tmpAABB = new AABB();
  * @param {array} result An array to store resulting bodies in.
  * @return {array}
  */
-NaiveBroadphase.prototype.aabbQuery = function(world, aabb, result){
-    result = result || [];
+NaiveBroadphase.prototype.aabbQuery = function(world, aabb, result) {
+  result = result || [];
 
-    for(var i = 0; i < world.bodies.length; i++){
-        var b = world.bodies[i];
+  for (var i = 0; i < world.bodies.length; i++) {
+    var b = world.bodies[i];
 
-        if(b.aabbNeedsUpdate){
-            b.computeAABB();
-        }
-
-        // Ugly hack until Body gets aabb
-        if(b.aabb.overlaps(aabb)){
-            result.push(b);
-        }
+    if (b.aabbNeedsUpdate) {
+      b.computeAABB();
     }
 
-    return result;
+    // Ugly hack until Body gets aabb
+    if (b.aabb.overlaps(aabb)) {
+      result.push(b);
+    }
+  }
+
+  return result;
 };

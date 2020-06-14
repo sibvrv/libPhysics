@@ -5,18 +5,18 @@ module.exports = Pool;
  * @class Pool
  * @constructor
  */
-function Pool(){
-    /**
-     * The pooled objects
-     * @property {Array} objects
-     */
-    this.objects = [];
+function Pool() {
+  /**
+   * The pooled objects
+   * @property {Array} objects
+   */
+  this.objects = [];
 
-    /**
-     * Constructor of the objects
-     * @property {mixed} type
-     */
-    this.type = Object;
+  /**
+   * Constructor of the objects
+   * @property {mixed} type
+   */
+  this.type = Object;
 }
 
 /**
@@ -24,12 +24,12 @@ function Pool(){
  * @method release
  * @param {Object} obj
  */
-Pool.prototype.release = function(){
-    var Nargs = arguments.length;
-    for(var i=0; i!==Nargs; i++){
-        this.objects.push(arguments[i]);
-    }
-    return this;
+Pool.prototype.release = function() {
+  var Nargs = arguments.length;
+  for (var i = 0; i !== Nargs; i++) {
+    this.objects.push(arguments[i]);
+  }
+  return this;
 };
 
 /**
@@ -37,12 +37,12 @@ Pool.prototype.release = function(){
  * @method get
  * @return {mixed}
  */
-Pool.prototype.get = function(){
-    if(this.objects.length===0){
-        return this.constructObject();
-    } else {
-        return this.objects.pop();
-    }
+Pool.prototype.get = function() {
+  if (this.objects.length === 0) {
+    return this.constructObject();
+  } else {
+    return this.objects.pop();
+  }
 };
 
 /**
@@ -50,8 +50,8 @@ Pool.prototype.get = function(){
  * @method constructObject
  * @return {mixed}
  */
-Pool.prototype.constructObject = function(){
-    throw new Error("constructObject() not implemented in this Pool subclass yet!");
+Pool.prototype.constructObject = function() {
+  throw new Error('constructObject() not implemented in this Pool subclass yet!');
 };
 
 /**
@@ -59,17 +59,17 @@ Pool.prototype.constructObject = function(){
  * @param {number} size
  * @return {Pool} Self, for chaining
  */
-Pool.prototype.resize = function (size) {
-    var objects = this.objects;
+Pool.prototype.resize = function(size) {
+  var objects = this.objects;
 
-    while (objects.length > size) {
-        objects.pop();
-    }
+  while (objects.length > size) {
+    objects.pop();
+  }
 
-    while (objects.length < size) {
-        objects.push(this.constructObject());
-    }
+  while (objects.length < size) {
+    objects.push(this.constructObject());
+  }
 
-    return this;
+  return this;
 };
 

@@ -8,10 +8,11 @@ var Pool = require('./Pool');
  * @constructor
  * @extends Pool
  */
-function Vec3Pool(){
-    Pool.call(this);
-    this.type = Vec3;
+function Vec3Pool() {
+  Pool.call(this);
+  this.type = Vec3;
 }
+
 Vec3Pool.prototype = new Pool();
 
 /**
@@ -19,6 +20,6 @@ Vec3Pool.prototype = new Pool();
  * @method constructObject
  * @return {Vec3}
  */
-Vec3Pool.prototype.constructObject = function(){
-    return new Vec3();
+Vec3Pool.prototype.constructObject = function() {
+  return new Vec3();
 };

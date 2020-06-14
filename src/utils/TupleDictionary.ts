@@ -6,12 +6,12 @@ module.exports = TupleDictionary;
  */
 function TupleDictionary() {
 
-    /**
-     * The data storage
-     * @property data
-     * @type {Object}
-     */
-    this.data = { keys:[] };
+  /**
+   * The data storage
+   * @property data
+   * @type {Object}
+   */
+  this.data = {keys: []};
 }
 
 /**
@@ -21,13 +21,13 @@ function TupleDictionary() {
  * @return {Number}
  */
 TupleDictionary.prototype.get = function(i, j) {
-    if (i > j) {
-        // swap
-        var temp = j;
-        j = i;
-        i = temp;
-    }
-    return this.data[i+'-'+j];
+  if (i > j) {
+    // swap
+    var temp = j;
+    j = i;
+    i = temp;
+  }
+  return this.data[i + '-' + j];
 };
 
 /**
@@ -37,29 +37,29 @@ TupleDictionary.prototype.get = function(i, j) {
  * @param {Number} value
  */
 TupleDictionary.prototype.set = function(i, j, value) {
-    if (i > j) {
-        var temp = j;
-        j = i;
-        i = temp;
-    }
-    var key = i+'-'+j;
+  if (i > j) {
+    var temp = j;
+    j = i;
+    i = temp;
+  }
+  var key = i + '-' + j;
 
-    // Check if key already exists
-    if(!this.get(i,j)){
-        this.data.keys.push(key);
-    }
+  // Check if key already exists
+  if (!this.get(i, j)) {
+    this.data.keys.push(key);
+  }
 
-    this.data[key] = value;
+  this.data[key] = value;
 };
 
 /**
  * @method reset
  */
 TupleDictionary.prototype.reset = function() {
-    var data = this.data,
-        keys = data.keys;
-    while(keys.length > 0){
-        var key = keys.pop();
-        delete data[key];
-    }
+  var data = this.data,
+    keys = data.keys;
+  while (keys.length > 0) {
+    var key = keys.pop();
+    delete data[key];
+  }
 };

@@ -12,34 +12,34 @@ module.exports = RigidVehicle;
  * @constructor
  * @param {Body} [options.chassisBody]
  */
-function RigidVehicle(options){
-    this.wheelBodies = [];
+function RigidVehicle(options) {
+  this.wheelBodies = [];
 
-    /**
-     * @property coordinateSystem
-     * @type {Vec3}
-     */
-    this.coordinateSystem = typeof(options.coordinateSystem)==='undefined' ? new Vec3(1, 2, 3) : options.coordinateSystem.clone();
+  /**
+   * @property coordinateSystem
+   * @type {Vec3}
+   */
+  this.coordinateSystem = typeof (options.coordinateSystem) === 'undefined' ? new Vec3(1, 2, 3) : options.coordinateSystem.clone();
 
-    /**
-     * @property {Body} chassisBody
-     */
-    this.chassisBody = options.chassisBody;
+  /**
+   * @property {Body} chassisBody
+   */
+  this.chassisBody = options.chassisBody;
 
-    if(!this.chassisBody){
-        // No chassis body given. Create it!
-        var chassisShape = new Box(new Vec3(5, 2, 0.5));
-        this.chassisBody = new Body(1, chassisShape);
-    }
+  if (!this.chassisBody) {
+    // No chassis body given. Create it!
+    var chassisShape = new Box(new Vec3(5, 2, 0.5));
+    this.chassisBody = new Body(1, chassisShape);
+  }
 
-    /**
-     * @property constraints
-     * @type {Array}
-     */
-    this.constraints = [];
+  /**
+   * @property constraints
+   * @type {Array}
+   */
+  this.constraints = [];
 
-    this.wheelAxes = [];
-    this.wheelForces = [];
+  this.wheelAxes = [];
+  this.wheelForces = [];
 }
 
 /**
@@ -52,38 +52,38 @@ function RigidVehicle(options){
  * @param {Vec3} [options.axis] Axis of rotation of the wheel, locally defined in the chassis.
  * @param {Body} [options.body] The wheel body.
  */
-RigidVehicle.prototype.addWheel = function(options){
-    options = options || {};
-    var wheelBody = options.body;
-    if(!wheelBody){
-        wheelBody =  new Body(1, new Sphere(1.2));
-    }
-    this.wheelBodies.push(wheelBody);
-    this.wheelForces.push(0);
+RigidVehicle.prototype.addWheel = function(options) {
+  options = options || {};
+  var wheelBody = options.body;
+  if (!wheelBody) {
+    wheelBody = new Body(1, new Sphere(1.2));
+  }
+  this.wheelBodies.push(wheelBody);
+  this.wheelForces.push(0);
 
-    // Position constrain wheels
-    var zero = new Vec3();
-    var position = typeof(options.position) !== 'undefined' ? options.position.clone() : new Vec3();
+  // Position constrain wheels
+  var zero = new Vec3();
+  var position = typeof (options.position) !== 'undefined' ? options.position.clone() : new Vec3();
 
-    // Set position locally to the chassis
-    var worldPosition = new Vec3();
-    this.chassisBody.pointToWorldFrame(position, worldPosition);
-    wheelBody.position.set(worldPosition.x, worldPosition.y, worldPosition.z);
+  // Set position locally to the chassis
+  var worldPosition = new Vec3();
+  this.chassisBody.pointToWorldFrame(position, worldPosition);
+  wheelBody.position.set(worldPosition.x, worldPosition.y, worldPosition.z);
 
-    // Constrain wheel
-    var axis = typeof(options.axis) !== 'undefined' ? options.axis.clone() : new Vec3(0, 1, 0);
-    this.wheelAxes.push(axis);
+  // Constrain wheel
+  var axis = typeof (options.axis) !== 'undefined' ? options.axis.clone() : new Vec3(0, 1, 0);
+  this.wheelAxes.push(axis);
 
-    var hingeConstraint = new HingeConstraint(this.chassisBody, wheelBody, {
-        pivotA: position,
-        axisA: axis,
-        pivotB: Vec3.ZERO,
-        axisB: axis,
-        collideConnected: false
-    });
-    this.constraints.push(hingeConstraint);
+  var hingeConstraint = new HingeConstraint(this.chassisBody, wheelBody, {
+    pivotA: position,
+    axisA: axis,
+    pivotB: Vec3.ZERO,
+    axisB: axis,
+    collideConnected: false,
+  });
+  this.constraints.push(hingeConstraint);
 
-    return this.wheelBodies.length - 1;
+  return this.wheelBodies.length - 1;
 };
 
 /**
@@ -93,19 +93,19 @@ RigidVehicle.prototype.addWheel = function(options){
  * @param {integer} wheelIndex
  * @todo check coordinateSystem
  */
-RigidVehicle.prototype.setSteeringValue = function(value, wheelIndex){
-    // Set angle of the hinge axis
-    var axis = this.wheelAxes[wheelIndex];
+RigidVehicle.prototype.setSteeringValue = function(value, wheelIndex) {
+  // Set angle of the hinge axis
+  var axis = this.wheelAxes[wheelIndex];
 
-    var c = Math.cos(value),
-        s = Math.sin(value),
-        x = axis.x,
-        y = axis.y;
-    this.constraints[wheelIndex].axisA.set(
-        c*x -s*y,
-        s*x +c*y,
-        0
-    );
+  var c = Math.cos(value),
+    s = Math.sin(value),
+    x = axis.x,
+    y = axis.y;
+  this.constraints[wheelIndex].axisA.set(
+    c * x - s * y,
+    s * x + c * y,
+    0,
+  );
 };
 
 /**
@@ -114,10 +114,10 @@ RigidVehicle.prototype.setSteeringValue = function(value, wheelIndex){
  * @param {number} value
  * @param {integer} wheelIndex
  */
-RigidVehicle.prototype.setMotorSpeed = function(value, wheelIndex){
-    var hingeConstraint = this.constraints[wheelIndex];
-    hingeConstraint.enableMotor();
-    hingeConstraint.motorTargetVelocity = value;
+RigidVehicle.prototype.setMotorSpeed = function(value, wheelIndex) {
+  var hingeConstraint = this.constraints[wheelIndex];
+  hingeConstraint.enableMotor();
+  hingeConstraint.motorTargetVelocity = value;
 };
 
 /**
@@ -126,9 +126,9 @@ RigidVehicle.prototype.setMotorSpeed = function(value, wheelIndex){
  * @param {number} value
  * @param {integer} wheelIndex
  */
-RigidVehicle.prototype.disableMotor = function(wheelIndex){
-    var hingeConstraint = this.constraints[wheelIndex];
-    hingeConstraint.disableMotor();
+RigidVehicle.prototype.disableMotor = function(wheelIndex) {
+  var hingeConstraint = this.constraints[wheelIndex];
+  hingeConstraint.disableMotor();
 };
 
 var torque = new Vec3();
@@ -139,8 +139,8 @@ var torque = new Vec3();
  * @param  {number} value
  * @param  {integer} wheelIndex
  */
-RigidVehicle.prototype.setWheelForce = function(value, wheelIndex){
-    this.wheelForces[wheelIndex] = value;
+RigidVehicle.prototype.setWheelForce = function(value, wheelIndex) {
+  this.wheelForces[wheelIndex] = value;
 };
 
 /**
@@ -149,14 +149,14 @@ RigidVehicle.prototype.setWheelForce = function(value, wheelIndex){
  * @param  {number} value
  * @param  {integer} wheelIndex
  */
-RigidVehicle.prototype.applyWheelForce = function(value, wheelIndex){
-    var axis = this.wheelAxes[wheelIndex];
-    var wheelBody = this.wheelBodies[wheelIndex];
-    var bodyTorque = wheelBody.torque;
+RigidVehicle.prototype.applyWheelForce = function(value, wheelIndex) {
+  var axis = this.wheelAxes[wheelIndex];
+  var wheelBody = this.wheelBodies[wheelIndex];
+  var bodyTorque = wheelBody.torque;
 
-    axis.scale(value, torque);
-    wheelBody.vectorToWorldFrame(torque, torque);
-    bodyTorque.vadd(torque, bodyTorque);
+  axis.scale(value, torque);
+  wheelBody.vectorToWorldFrame(torque, torque);
+  bodyTorque.vadd(torque, bodyTorque);
 };
 
 /**
@@ -164,26 +164,26 @@ RigidVehicle.prototype.applyWheelForce = function(value, wheelIndex){
  * @method addToWorld
  * @param {World} world
  */
-RigidVehicle.prototype.addToWorld = function(world){
-    var constraints = this.constraints;
-    var bodies = this.wheelBodies.concat([this.chassisBody]);
+RigidVehicle.prototype.addToWorld = function(world) {
+  var constraints = this.constraints;
+  var bodies = this.wheelBodies.concat([this.chassisBody]);
 
-    for (var i = 0; i < bodies.length; i++) {
-        world.addBody(bodies[i]);
-    }
+  for (var i = 0; i < bodies.length; i++) {
+    world.addBody(bodies[i]);
+  }
 
-    for (var i = 0; i < constraints.length; i++) {
-        world.addConstraint(constraints[i]);
-    }
+  for (var i = 0; i < constraints.length; i++) {
+    world.addConstraint(constraints[i]);
+  }
 
-    world.addEventListener('preStep', this._update.bind(this));
+  world.addEventListener('preStep', this._update.bind(this));
 };
 
-RigidVehicle.prototype._update = function(){
-    var wheelForces = this.wheelForces;
-    for (var i = 0; i < wheelForces.length; i++) {
-        this.applyWheelForce(wheelForces[i], i);
-    }
+RigidVehicle.prototype._update = function() {
+  var wheelForces = this.wheelForces;
+  for (var i = 0; i < wheelForces.length; i++) {
+    this.applyWheelForce(wheelForces[i], i);
+  }
 };
 
 /**
@@ -191,17 +191,17 @@ RigidVehicle.prototype._update = function(){
  * @method removeFromWorld
  * @param {World} world
  */
-RigidVehicle.prototype.removeFromWorld = function(world){
-    var constraints = this.constraints;
-    var bodies = this.wheelBodies.concat([this.chassisBody]);
+RigidVehicle.prototype.removeFromWorld = function(world) {
+  var constraints = this.constraints;
+  var bodies = this.wheelBodies.concat([this.chassisBody]);
 
-    for (var i = 0; i < bodies.length; i++) {
-        world.remove(bodies[i]);
-    }
+  for (var i = 0; i < bodies.length; i++) {
+    world.remove(bodies[i]);
+  }
 
-    for (var i = 0; i < constraints.length; i++) {
-        world.removeConstraint(constraints[i]);
-    }
+  for (var i = 0; i < constraints.length; i++) {
+    world.removeConstraint(constraints[i]);
+  }
 };
 
 var worldAxis = new Vec3();
@@ -211,10 +211,10 @@ var worldAxis = new Vec3();
  * @method getWheelSpeed
  * @param {integer} wheelIndex
  */
-RigidVehicle.prototype.getWheelSpeed = function(wheelIndex){
-    var axis = this.wheelAxes[wheelIndex];
-    var wheelBody = this.wheelBodies[wheelIndex];
-    var w = wheelBody.angularVelocity;
-    this.chassisBody.vectorToWorldFrame(axis, worldAxis);
-    return w.dot(worldAxis);
+RigidVehicle.prototype.getWheelSpeed = function(wheelIndex) {
+  var axis = this.wheelAxes[wheelIndex];
+  var wheelBody = this.wheelBodies[wheelIndex];
+  var w = wheelBody.angularVelocity;
+  this.chassisBody.vectorToWorldFrame(axis, worldAxis);
+  return w.dot(worldAxis);
 };

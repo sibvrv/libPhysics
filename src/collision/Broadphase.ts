@@ -12,26 +12,26 @@ module.exports = Broadphase;
  * @constructor
  * @author schteppe
  */
-function Broadphase(){
-    /**
-    * The world to search for collisions in.
-    * @property world
-    * @type {World}
-    */
-    this.world = null;
+function Broadphase() {
+  /**
+   * The world to search for collisions in.
+   * @property world
+   * @type {World}
+   */
+  this.world = null;
 
-    /**
-     * If set to true, the broadphase uses bounding boxes for intersection test, else it uses bounding spheres.
-     * @property useBoundingBoxes
-     * @type {Boolean}
-     */
-    this.useBoundingBoxes = false;
+  /**
+   * If set to true, the broadphase uses bounding boxes for intersection test, else it uses bounding spheres.
+   * @property useBoundingBoxes
+   * @type {Boolean}
+   */
+  this.useBoundingBoxes = false;
 
-    /**
-     * Set to true if the objects in the world moved.
-     * @property {Boolean} dirty
-     */
-    this.dirty = true;
+  /**
+   * Set to true if the objects in the world moved.
+   * @property {Boolean} dirty
+   */
+  this.dirty = true;
 }
 
 /**
@@ -41,8 +41,8 @@ function Broadphase(){
  * @param {Array} p1 Empty array to be filled with body objects
  * @param {Array} p2 Empty array to be filled with body objects
  */
-Broadphase.prototype.collisionPairs = function(world,p1,p2){
-    throw new Error("collisionPairs not implemented for this BroadPhase class!");
+Broadphase.prototype.collisionPairs = function(world, p1, p2) {
+  throw new Error('collisionPairs not implemented for this BroadPhase class!');
 };
 
 /**
@@ -52,21 +52,21 @@ Broadphase.prototype.collisionPairs = function(world,p1,p2){
  * @param {Body} bodyB
  * @return {bool}
  */
-Broadphase.prototype.needBroadphaseCollision = function(bodyA,bodyB){
+Broadphase.prototype.needBroadphaseCollision = function(bodyA, bodyB) {
 
-    // Check collision filter masks
-    if( (bodyA.collisionFilterGroup & bodyB.collisionFilterMask)===0 || (bodyB.collisionFilterGroup & bodyA.collisionFilterMask)===0){
-        return false;
-    }
+  // Check collision filter masks
+  if ((bodyA.collisionFilterGroup & bodyB.collisionFilterMask) === 0 || (bodyB.collisionFilterGroup & bodyA.collisionFilterMask) === 0) {
+    return false;
+  }
 
-    // Check types
-    if(((bodyA.type & Body.STATIC)!==0 || bodyA.sleepState === Body.SLEEPING) &&
-       ((bodyB.type & Body.STATIC)!==0 || bodyB.sleepState === Body.SLEEPING)) {
-        // Both bodies are static or sleeping. Skip.
-        return false;
-    }
+  // Check types
+  if (((bodyA.type & Body.STATIC) !== 0 || bodyA.sleepState === Body.SLEEPING) &&
+    ((bodyB.type & Body.STATIC) !== 0 || bodyB.sleepState === Body.SLEEPING)) {
+    // Both bodies are static or sleeping. Skip.
+    return false;
+  }
 
-    return true;
+  return true;
 };
 
 /**
@@ -76,13 +76,13 @@ Broadphase.prototype.needBroadphaseCollision = function(bodyA,bodyB){
  * @param {Body} bodyB
  * @param {array} pairs1
  * @param {array} pairs2
-  */
-Broadphase.prototype.intersectionTest = function(bodyA, bodyB, pairs1, pairs2){
-    if(this.useBoundingBoxes){
-        this.doBoundingBoxBroadphase(bodyA,bodyB,pairs1,pairs2);
-    } else {
-        this.doBoundingSphereBroadphase(bodyA,bodyB,pairs1,pairs2);
-    }
+ */
+Broadphase.prototype.intersectionTest = function(bodyA, bodyB, pairs1, pairs2) {
+  if (this.useBoundingBoxes) {
+    this.doBoundingBoxBroadphase(bodyA, bodyB, pairs1, pairs2);
+  } else {
+    this.doBoundingSphereBroadphase(bodyA, bodyB, pairs1, pairs2);
+  }
 };
 
 /**
@@ -94,18 +94,18 @@ Broadphase.prototype.intersectionTest = function(bodyA, bodyB, pairs1, pairs2){
  * @param {Array} pairs2 bodyB is appended to this array if intersection
  */
 var Broadphase_collisionPairs_r = new Vec3(), // Temp objects
-    Broadphase_collisionPairs_normal =  new Vec3(),
-    Broadphase_collisionPairs_quat =  new Quaternion(),
-    Broadphase_collisionPairs_relpos  =  new Vec3();
-Broadphase.prototype.doBoundingSphereBroadphase = function(bodyA,bodyB,pairs1,pairs2){
-    var r = Broadphase_collisionPairs_r;
-    bodyB.position.vsub(bodyA.position,r);
-    var boundingRadiusSum2 = Math.pow(bodyA.boundingRadius + bodyB.boundingRadius, 2);
-    var norm2 = r.norm2();
-    if(norm2 < boundingRadiusSum2){
-        pairs1.push(bodyA);
-        pairs2.push(bodyB);
-    }
+  Broadphase_collisionPairs_normal = new Vec3(),
+  Broadphase_collisionPairs_quat = new Quaternion(),
+  Broadphase_collisionPairs_relpos = new Vec3();
+Broadphase.prototype.doBoundingSphereBroadphase = function(bodyA, bodyB, pairs1, pairs2) {
+  var r = Broadphase_collisionPairs_r;
+  bodyB.position.vsub(bodyA.position, r);
+  var boundingRadiusSum2 = Math.pow(bodyA.boundingRadius + bodyB.boundingRadius, 2);
+  var norm2 = r.norm2();
+  if (norm2 < boundingRadiusSum2) {
+    pairs1.push(bodyA);
+    pairs2.push(bodyB);
+  }
 };
 
 /**
@@ -116,19 +116,19 @@ Broadphase.prototype.doBoundingSphereBroadphase = function(bodyA,bodyB,pairs1,pa
  * @param {Array} pairs1
  * @param {Array} pairs2
  */
-Broadphase.prototype.doBoundingBoxBroadphase = function(bodyA,bodyB,pairs1,pairs2){
-    if(bodyA.aabbNeedsUpdate){
-        bodyA.computeAABB();
-    }
-    if(bodyB.aabbNeedsUpdate){
-        bodyB.computeAABB();
-    }
+Broadphase.prototype.doBoundingBoxBroadphase = function(bodyA, bodyB, pairs1, pairs2) {
+  if (bodyA.aabbNeedsUpdate) {
+    bodyA.computeAABB();
+  }
+  if (bodyB.aabbNeedsUpdate) {
+    bodyB.computeAABB();
+  }
 
-    // Check AABB / AABB
-    if(bodyA.aabb.overlaps(bodyB.aabb)){
-        pairs1.push(bodyA);
-        pairs2.push(bodyB);
-    }
+  // Check AABB / AABB
+  if (bodyA.aabb.overlaps(bodyB.aabb)) {
+    pairs1.push(bodyA);
+    pairs2.push(bodyB);
+  }
 };
 
 /**
@@ -137,38 +137,38 @@ Broadphase.prototype.doBoundingBoxBroadphase = function(bodyA,bodyB,pairs1,pairs
  * @param {Array} pairs1
  * @param {Array} pairs2
  */
-var Broadphase_makePairsUnique_temp = { keys:[] },
-    Broadphase_makePairsUnique_p1 = [],
-    Broadphase_makePairsUnique_p2 = [];
-Broadphase.prototype.makePairsUnique = function(pairs1,pairs2){
-    var t = Broadphase_makePairsUnique_temp,
-        p1 = Broadphase_makePairsUnique_p1,
-        p2 = Broadphase_makePairsUnique_p2,
-        N = pairs1.length;
+var Broadphase_makePairsUnique_temp = {keys: []},
+  Broadphase_makePairsUnique_p1 = [],
+  Broadphase_makePairsUnique_p2 = [];
+Broadphase.prototype.makePairsUnique = function(pairs1, pairs2) {
+  var t = Broadphase_makePairsUnique_temp,
+    p1 = Broadphase_makePairsUnique_p1,
+    p2 = Broadphase_makePairsUnique_p2,
+    N = pairs1.length;
 
-    for(var i=0; i!==N; i++){
-        p1[i] = pairs1[i];
-        p2[i] = pairs2[i];
-    }
+  for (var i = 0; i !== N; i++) {
+    p1[i] = pairs1[i];
+    p2[i] = pairs2[i];
+  }
 
-    pairs1.length = 0;
-    pairs2.length = 0;
+  pairs1.length = 0;
+  pairs2.length = 0;
 
-    for(var i=0; i!==N; i++){
-        var id1 = p1[i].id,
-            id2 = p2[i].id;
-        var key = id1 < id2 ? id1+","+id2 :  id2+","+id1;
-        t[key] = i;
-        t.keys.push(key);
-    }
+  for (var i = 0; i !== N; i++) {
+    var id1 = p1[i].id,
+      id2 = p2[i].id;
+    var key = id1 < id2 ? id1 + ',' + id2 : id2 + ',' + id1;
+    t[key] = i;
+    t.keys.push(key);
+  }
 
-    for(var i=0; i!==t.keys.length; i++){
-        var key = t.keys.pop(),
-            pairIndex = t[key];
-        pairs1.push(p1[pairIndex]);
-        pairs2.push(p2[pairIndex]);
-        delete t[key];
-    }
+  for (var i = 0; i !== t.keys.length; i++) {
+    var key = t.keys.pop(),
+      pairIndex = t[key];
+    pairs1.push(p1[pairIndex]);
+    pairs2.push(p2[pairIndex]);
+    delete t[key];
+  }
 };
 
 /**
@@ -176,7 +176,7 @@ Broadphase.prototype.makePairsUnique = function(pairs1,pairs2){
  * @method setWorld
  * @param {World} world
  */
-Broadphase.prototype.setWorld = function(world){
+Broadphase.prototype.setWorld = function(world) {
 };
 
 /**
@@ -187,10 +187,10 @@ Broadphase.prototype.setWorld = function(world){
  * @return {boolean}
  */
 var bsc_dist = new Vec3();
-Broadphase.boundingSphereCheck = function(bodyA,bodyB){
-    var dist = bsc_dist;
-    bodyA.position.vsub(bodyB.position,dist);
-    return Math.pow(bodyA.shape.boundingSphereRadius + bodyB.shape.boundingSphereRadius,2) > dist.norm2();
+Broadphase.boundingSphereCheck = function(bodyA, bodyB) {
+  var dist = bsc_dist;
+  bodyA.position.vsub(bodyB.position, dist);
+  return Math.pow(bodyA.shape.boundingSphereRadius + bodyB.shape.boundingSphereRadius, 2) > dist.norm2();
 };
 
 /**
@@ -201,7 +201,7 @@ Broadphase.boundingSphereCheck = function(bodyA,bodyB){
  * @param  {array} result An array to store resulting bodies in.
  * @return {array}
  */
-Broadphase.prototype.aabbQuery = function(world, aabb, result){
-    console.warn('.aabbQuery is not implemented in this Broadphase subclass.');
-    return [];
+Broadphase.prototype.aabbQuery = function(world, aabb, result) {
+  console.warn('.aabbQuery is not implemented in this Broadphase subclass.');
+  return [];
 };

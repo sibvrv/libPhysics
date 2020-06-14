@@ -7,17 +7,17 @@ var Vec3 = require('./Vec3');
  * @class JacobianElement
  * @constructor
  */
-function JacobianElement(){
+function JacobianElement() {
 
-    /**
-     * @property {Vec3} spatial
-     */
-    this.spatial = new Vec3();
+  /**
+   * @property {Vec3} spatial
+   */
+  this.spatial = new Vec3();
 
-    /**
-     * @property {Vec3} rotational
-     */
-    this.rotational = new Vec3();
+  /**
+   * @property {Vec3} rotational
+   */
+  this.rotational = new Vec3();
 }
 
 /**
@@ -26,8 +26,8 @@ function JacobianElement(){
  * @param  {JacobianElement} element
  * @return {Number}
  */
-JacobianElement.prototype.multiplyElement = function(element){
-    return element.spatial.dot(this.spatial) + element.rotational.dot(this.rotational);
+JacobianElement.prototype.multiplyElement = function(element) {
+  return element.spatial.dot(this.spatial) + element.rotational.dot(this.rotational);
 };
 
 /**
@@ -37,6 +37,6 @@ JacobianElement.prototype.multiplyElement = function(element){
  * @param  {Vec3} rotational
  * @return {Number}
  */
-JacobianElement.prototype.multiplyVectors = function(spatial,rotational){
-    return spatial.dot(this.spatial) + rotational.dot(this.rotational);
+JacobianElement.prototype.multiplyVectors = function(spatial, rotational) {
+  return spatial.dot(this.spatial) + rotational.dot(this.rotational);
 };
